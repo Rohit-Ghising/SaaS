@@ -49,6 +49,23 @@ export const SignInView= ()=>{
       },
     )
   }
+  const onSocial=(provider:"github"|"google")=>{
+    setError(null);
+    setPending(true)
+     authClient.signIn.social(
+      {provider:provider
+      },
+      {
+        onSuccess: ()=>{
+          router.push('/')
+          setPending(false)
+        },
+        onError:({error})=>{
+          setError(error.message)
+        }
+      },
+    )
+  }
 
   return(
     <div className="flex flex-col gap-6">
@@ -130,12 +147,15 @@ export const SignInView= ()=>{
       {/* -------------------------------------- */}
       <div className='grid grid-cols-2 gap-4'>
         <Button variant='outline'type='button'
+        onClick={()=> onSocial('google')}
+
         className='w-full'>
           Google
 
         </Button>
         <Button variant='outline'type='button'
-        className='w-full'>
+        className='w-full'
+        onClick={()=>onSocial('github')}>
           Gitub
 
         </Button>
