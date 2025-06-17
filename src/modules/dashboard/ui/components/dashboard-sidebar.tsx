@@ -9,11 +9,12 @@ import {
   SidebarMenu,SidebarMenuButton,SidebarMenuItem
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { Separator } from "@radix-ui/react-separator"
+import { Separator } from "@/components/ui/separator"
 import {  BotIcon, Star, VideoIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { DashboardUserButton } from "./dashboard-user-component"
 const firstSection = [{
   icon:VideoIcon,
   label:"Meetings",
@@ -45,6 +46,7 @@ const secondSection = [{
       </div>
       <SidebarContent>
         <SidebarGroup>
+          
           <SidebarGroupContent>
             <SidebarMenu>
               {firstSection.map((item)=>(
@@ -60,7 +62,31 @@ const secondSection = [{
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {/* ----------- */}
+        <div className="px-2 py-2 ">
+        <Separator className="opacity-10 text-[#5D6B68]"/>
+      </div>
+            <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {secondSection.map((item)=>(
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton asChild className={cn("h-10 hover:bg-linear-to-r/oklch border-transparent hover:border-[#5d6B68]/10 from-sidebar-accent from-5%  via-30% via-sidebar/50 to-sidebar/50",pathname===item.href && "bg-linear-to-r/oklch border-[#5D6B6B]/10")}>
+                    <Link href={item.href}>
+                    <item.icon className="size-5 "/>
+                    <span className="text-sm  font-medium tracking-tight">{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="text-white ">
+        <DashboardUserButton/>
+
+      </SidebarFooter>
     </Sidebar>
   )
  }
