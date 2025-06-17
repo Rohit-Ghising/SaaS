@@ -7,12 +7,14 @@ import {Button} from '@/components/ui/button'
 import {Form,FormControl,FormField,FormItem,FormLabel,FormMessage} from '@/components/ui/form'
 import {Alert,AlertTitle} from "@/components/ui/alert"
 import { authClient } from '@/lib/auth-client';
+import {FaGoogle,FaGithub} from "react-icons/fa"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 const formSchema = z.object({
   email:z.string().email(),
   password:z.string().min(1,{message:"Password is required"})
@@ -21,6 +23,7 @@ const formSchema = z.object({
 
 export const SignInView= ()=>{
   const router = useRouter()
+  
   const [error,setError] = useState<string|null>(null)
   const [pending,setPending] = useState<boolean>()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -36,12 +39,14 @@ export const SignInView= ()=>{
      authClient.signIn.email(
       {
         email:data.email,
-        password:data.password
+        password:data.password,
+        callbackURL:"/"
       },
       {
         onSuccess: ()=>{
-          router.push('/')
+          
           setPending(false)
+          router.push('/')
         },
         onError:({error})=>{
           setError(error.message)
@@ -53,11 +58,12 @@ export const SignInView= ()=>{
     setError(null);
     setPending(true)
      authClient.signIn.social(
-      {provider:provider
+      {provider:provider,
+        callbackURL:'/'
       },
       {
         onSuccess: ()=>{
-          router.push('/')
+         
           setPending(false)
         },
         onError:({error})=>{
@@ -150,13 +156,13 @@ export const SignInView= ()=>{
         onClick={()=> onSocial('google')}
 
         className='w-full'>
-          Google
+          <FaGoogle/>
 
         </Button>
         <Button variant='outline'type='button'
         className='w-full'
         onClick={()=>onSocial('github')}>
-          Gitub
+          <FaGithub/>
 
         </Button>
       </div>
