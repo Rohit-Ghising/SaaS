@@ -1,7 +1,8 @@
-import { LoadingState } from "@/components/loading-state"
-import { AgentsView } from "@/modules/agents/ui/views/agents-view"
+
+import { AgentsView, AgentViewError, AgentViewLoading } from "@/modules/agents/ui/views/agents-view"
 import { getQueryClient ,trpc} from "@/trpc/server"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
+import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 
 const Page = ()=>{
@@ -9,8 +10,11 @@ const Page = ()=>{
   void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions())
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<LoadingState title="Loading" description="please wait... page is loading"/>}>
-      <AgentsView/>
+      <Suspense fallback={<AgentViewLoading/>}>
+      <ErrorBoundary fallback={<AgentViewError/>}>
+<AgentsView/>
+      </ErrorBoundary>
+      
       </Suspense>
     </HydrationBoundary>
     
