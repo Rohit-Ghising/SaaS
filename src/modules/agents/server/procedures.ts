@@ -1,16 +1,26 @@
 import { db } from "@/db";
 import { agents } from "@/db/schema";
-import { createTRPCRouter,baseProcedure } from "@/trpc/init";
+import { createTRPCRouter, baseProcedure, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { resolve } from "path";
-export const agentRouter =  createTRPCRouter ({
-  getMany:baseProcedure.query((async ()=>{
+import { agentsInsertSchema } from "../schema";
+
+export const agentRouter = createTRPCRouter({
+  //TODO CHANGE 'getMAny' to use  protected procedure
+  getMany: baseProcedure.query(async () => {
     const data = await db
-    .select()
-    .from(agents)
+      .select()
+      .from(agents);
     // await new Promise((resolve)=>setTimeout(resolve,5000))
     // throw new TRPCError({code:"BAD_REQUEST"})
-    return data
-  })
-)
-})
+    return data;
+  }),
+
+  create: protectedProcedure.input(agentsInsertSchema).mutation(async ({input,ctx})=>{
+    const [createdAgent] = await db.insert(agents).values({...input,
+      userId:ctx.auth.user.id,
+    }).returning()
+    return createdAgent
+    
+  }),
+});
