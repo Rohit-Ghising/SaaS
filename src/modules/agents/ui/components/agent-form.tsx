@@ -1,6 +1,6 @@
 import { useTRPC } from "@/trpc/client"
 import { AgentGetOne } from "../../types"
-import { useRouter } from "next/navigation"
+
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import {z} from "zod"
@@ -12,21 +12,33 @@ import { Textarea } from "@/components/ui/textarea"
 
 import { Form,FormControl, FormField,FormLabel,FormItem,FormMessage} from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 interface AgentFormProps {
-  inSuccess?:()=>void
-  inCancel?:()=>void
+  onSuccess?:()=>void
+  onCancel?:()=>void
   initialValues?:AgentGetOne
 }
  export const AgentForm = ({onSuccess,onCancel,initialValues}:AgentFormProps)=>{
   const trpc = useTRPC()
-  const router = useRouter()
-  const queryClient = useQueryClient
+  
+  const queryClient = useQueryClient()
    
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
-      onSuccess:()=>{},
-      onError:()=>{}
+      onSuccess:async()=>{
+        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions());
+
+        if(initialValues?.id){
+         await queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({id:initialValues.id}))
+        }
+        onSuccess?.()
+
+      },
+      onError:(error)=>{
+        toast.error(error.message)
+  
+      }
     })
   )
   const form = useForm<z.infer<typeof agentsInsertSchema>>({
@@ -78,8 +90,7 @@ interface AgentFormProps {
       
     </FormItem>)}
     />
-   </form>
-   <div className="flex justify-between gap-x-2 ">
+     <div className="flex justify-between gap-x-2 ">
     {onCancel &&(
       <Button variant="ghost" disabled={isPending} type="button" onClick={()=>onCancel()}> Cancel
 
@@ -90,6 +101,8 @@ interface AgentFormProps {
 
     </Button>
    </div>
+   </form>
+  
 
    </Form>
   )
