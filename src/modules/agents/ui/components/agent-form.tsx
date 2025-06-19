@@ -1,0 +1,96 @@
+import { useTRPC } from "@/trpc/client"
+import { AgentGetOne } from "../../types"
+import { useRouter } from "next/navigation"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useForm } from "react-hook-form"
+import {z} from "zod"
+import { Input } from "@/components/ui/input"
+import { agentsInsertSchema } from "../../schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { GeneratedAvatar } from "@/components/generated-avatar"
+import { Textarea } from "@/components/ui/textarea"
+
+import { Form,FormControl, FormField,FormLabel,FormItem,FormMessage} from "@/components/ui/form"
+import { Button } from "@/components/ui/button"
+
+interface AgentFormProps {
+  inSuccess?:()=>void
+  inCancel?:()=>void
+  initialValues?:AgentGetOne
+}
+ export const AgentForm = ({onSuccess,onCancel,initialValues}:AgentFormProps)=>{
+  const trpc = useTRPC()
+  const router = useRouter()
+  const queryClient = useQueryClient
+   
+  const createAgent = useMutation(
+    trpc.agents.create.mutationOptions({
+      onSuccess:()=>{},
+      onError:()=>{}
+    })
+  )
+  const form = useForm<z.infer<typeof agentsInsertSchema>>({
+    resolver:zodResolver(agentsInsertSchema),
+    defaultValues:{ 
+      name: initialValues?.name ??"",
+      instructions: initialValues?.instructions ??""
+
+    }
+ })
+ const isEdit = !! initialValues?.id
+ const isPending = createAgent.isPending 
+ const onSubmit = (values: z.infer<typeof agentsInsertSchema>)=>{
+  if (isEdit){console.log("Opdate Agent")}
+  else{
+    createAgent.mutate(values)
+  }
+
+ } 
+  return (
+   <Form{...form}>
+   <form  className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+    <GeneratedAvatar seed={form.watch("name")} variant="botttsNeutral" className="border size-16"/>
+    <FormField name="name" control={form.control}
+    render={({field})=>(<FormItem>
+      <FormLabel>
+        Name </FormLabel>
+        <FormControl>
+          <Input {...field} placeholder="e.g tutuor"/>
+        </FormControl>
+        <FormMessage/>
+      
+      {/* - */}
+      
+    </FormItem>)}
+    />
+    {/*  */}
+    <FormField name="instructions" control={form.control}
+    render={({field})=>(<FormItem>
+      <FormLabel>
+        Instuctions
+        </FormLabel>
+        <FormControl>
+          <Textarea {...field} placeholder="Write Something."/>
+        </FormControl>
+        <FormMessage/>
+      
+      {/* - */}
+      
+    </FormItem>)}
+    />
+   </form>
+   <div className="flex justify-between gap-x-2 ">
+    {onCancel &&(
+      <Button variant="ghost" disabled={isPending} type="button" onClick={()=>onCancel()}> Cancel
+
+    </Button>)}
+    {/*  */}
+    <Button disabled={isPending} type="submit">
+      {isEdit?"Update" :"Create"}
+
+    </Button>
+   </div>
+
+   </Form>
+  )
+ }
