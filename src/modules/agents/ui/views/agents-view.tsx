@@ -11,7 +11,7 @@ import { columns} from "../components/columns"
 
 export const AgentsView = ()=>{
   const trpc = useTRPC()
-  const {data} = useSuspenseQuery(trpc.agents.getMany.queryOptions());
+  const {data} = useSuspenseQuery(trpc.agents.getMany.queryOptions({}));
 
   
   
@@ -23,8 +23,8 @@ export const AgentsView = ()=>{
           Some Action
         </Button>
       </ResponsiveDialog> */}
-     <DataTable data={data} columns={columns}/>
-     {data.length === 0 && (<EmptyState 
+     <DataTable data={data.items} columns={columns}/>
+     {data.items.length === 0 && (<EmptyState 
      title="Create your first Agent"
      description="Create an agent to join meeting"/>)}
     </div>
