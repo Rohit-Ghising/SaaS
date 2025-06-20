@@ -1,5 +1,5 @@
 "use client"
-import { EmptyState, ErrorState } from "@/components/error-state"
+import { EmptyState } from "@/components/error-state"
 import { LoadingState } from "@/components/loading-state"
 // import { ResponsiveDialog } from "@/components/responsive-dialog"
 // import { Button } from "@/components/ui/button"
@@ -11,7 +11,8 @@ import { columns} from "../components/columns"
 
 export const AgentsView = ()=>{
   const trpc = useTRPC()
-  const {data} = useSuspenseQuery(trpc.agents.getMany.queryOptions({}));
+  const {data} = useSuspenseQuery(trpc.agents.getMany.queryOptions({
+      }));
 
   
   
@@ -35,6 +36,6 @@ export const AgentViewLoading =()=>{return(
   )}
 
 
-  export const AgentViewError =()=>{return(
-     <ErrorState title="Error loading Agents" description="Something went Wrong"/>
-  )}
+  // export const AgentViewError =()=>{return(
+  //   //  <ErrorState title="Error loading Agents" description="Something went Wrong"/>
+  // )}
