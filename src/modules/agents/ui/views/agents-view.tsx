@@ -10,6 +10,7 @@ import { columns} from "../components/columns"
 import { useAgentsFilters } from "../../hooks/use-agents-filters"
 import { DataPagination } from "../components/data-pagination"
 import { useRouter } from "next/navigation"
+import { ErrorState } from "@/components/empty-state"
 
 
 
@@ -49,6 +50,6 @@ export const AgentViewLoading =()=>{return(
   )}
 
 
-  // export const AgentViewError =()=>{return(
-  //   //  <ErrorState title="Error loading Agents" description="Something went Wrong"/>
-  // )}
+  export const AgentViewError =()=>{return(
+     <ErrorState title="Error loading Agents" description="Something went Wrong"/>
+  )}
