@@ -11,7 +11,7 @@ import { Search } from "lucide-react";
 
 export const agentRouter = createTRPCRouter({
   //TODO CHANGE 'getune' to use  protected procedure
-  getOne: protectedProcedure.input(z.object({id:z.string()})).query(async ({input}) => {
+  getOne: protectedProcedure.input(z.object({id:z.string()})).query(async ({input,ctx}) => {
     const [existingAgent] = await db
       .select({
         meetingCount : sql<number>`5`,
@@ -19,7 +19,15 @@ export const agentRouter = createTRPCRouter({
         
       })
       .from(agents)
-      .where(eq(agents.id,input.id))
+      .where(and
+        (eq(agents.id,input.id),
+        eq(agents.userId,ctx.auth.user.id)
+      ))
+      if (!existingAgent)
+      {
+        throw new TRPCError({code:"NOT_FOUND",message:"Agent not Found"})
+      }
+      
     // await new Promise((resolve)=>setTimeout(resolve,5000))
     // throw new TRPCError({code:"BAD_REQUEST"})
     return existingAgent;
