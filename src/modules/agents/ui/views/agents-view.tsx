@@ -5,12 +5,13 @@ import { LoadingState } from "@/components/loading-state"
 // import { Button } from "@/components/ui/button"
 import { useTRPC } from "@/trpc/client"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { DataTable } from "../components/data-table"
+
 import { columns} from "../components/columns"
 import { useAgentsFilters } from "../../hooks/use-agents-filters"
 import { DataPagination } from "../components/data-pagination"
 import { useRouter } from "next/navigation"
 import { ErrorState } from "@/components/empty-state"
+import { DataTable } from "@/components/data-table"
 
 
 
