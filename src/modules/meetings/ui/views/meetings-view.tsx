@@ -17,7 +17,7 @@ export const MeetingsView= ()=>{
       <DataTable data={data.items} columns={columns}/>
       {data.items.length === 0 && (<EmptyState
            title="Create your first Meetin"
-           description="Shcedud; to join meeting"/>)}
+           description="Shcedule to join meeting"/>)}
 
 
     </div>
