@@ -10,6 +10,9 @@ import { useConfirm } from "../../hooks/use-confirm"
 import { UpdateMeetingDialog } from "../components/update-meeting-dialog "
 import { useState } from "react"
 import { UpcomingState } from "../components/upcomming-state"
+import { ActiveState } from "../components/active-state "
+import { CancelState } from "../components/cancel-state"
+import { ProcessingState } from "../components/processing-state"
 
 
 interface Props{
@@ -54,11 +57,11 @@ export const MeetingIdView = ({meetingId}:Props)=>{
       meetingName={data.name}
       onRemove={handleRemoveMeeting}
       onEdit={()=>setUpdateMeetingDialogOpen(true)}/>
-      { isCancelled &&  <div>  Cancelled</div> }
+      { isCancelled &&    <CancelState/> }
       { isCompleted &&  <div>  Completed</div> }
-      { isProcessing &&  <div>  Processing</div> }
+      { isProcessing &&  <div>  <ProcessingState/></div> }
       { isUpcoming&&  (<UpcomingState meetingId={meetingId} onCancelMeeting={()=>{}} isCancelling={false}/>)}
-      { isActive&&  <div>  Active</div> }
+      { isActive&&    <ActiveState meetingId={meetingId}/> }
       
     </div>
     </>
