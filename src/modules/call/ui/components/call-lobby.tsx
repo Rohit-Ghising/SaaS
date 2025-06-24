@@ -1,0 +1,2 @@
+interface Props{
+  onJoin:()=> void}
