@@ -1,3 +1,4 @@
+"use client"
 import { useTRPC } from "@/trpc/client"
 import { Call, CallingState, StreamCall, StreamVideo, StreamVideoClient } from "@stream-io/video-react-sdk";
 // import "@stream-io/video-react-sdk/dist/css/style.css";
@@ -17,6 +18,9 @@ export const CallConnect = ({meetingId,meetingName,userId,userName,userImage}:Pr
   const trpc = useTRPC()
   const {mutateAsync:generateToken}= useMutation(trpc.meetings.generateToken.mutationOptions())
   const [client ,setClient] = useState<StreamVideoClient>()
+
+
+
   useEffect(()=>{
     const _client = new StreamVideoClient({
       apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!, 
@@ -33,6 +37,8 @@ export const CallConnect = ({meetingId,meetingName,userId,userName,userImage}:Pr
       setClient(undefined)
     }
   },[userId,userName,userImage,generateToken])
+
+  
   const [call,setCall] = useState<Call>()
   useEffect(()=>{
     if(!client)return
