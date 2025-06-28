@@ -1,7 +1,9 @@
 "use client"
 import { useTRPC } from "@/trpc/client"
 import { Call, CallingState, StreamCall, StreamVideo, StreamVideoClient } from "@stream-io/video-react-sdk";
-// import "@stream-io/video-react-sdk/dist/css/style.css";
+//  import "@stream-io/video-react-sdk/css/style.css";
+import "@stream-io/video-react-sdk/dist/css/styles.css"
+
 
 import { useMutation } from "@tanstack/react-query"
 import { LoaderIcon } from "lucide-react";
@@ -16,7 +18,8 @@ interface Props{
 }
 export const CallConnect = ({meetingId,meetingName,userId,userName,userImage}:Props)=>{
   const trpc = useTRPC()
-  const {mutateAsync:generateToken}= useMutation(trpc.meetings.generateToken.mutationOptions())
+  const {mutateAsync:generateToken}= useMutation(trpc.meetings.generateToken.mutationOptions()
+);
   const [client ,setClient] = useState<StreamVideoClient>()
 
 
@@ -63,7 +66,7 @@ if(!client || !call){
   return(
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <CallUI meetingName={meetingName}/>
+        <CallUI meetingName={meetingName}/> 
 
       </StreamCall>
     </StreamVideo>

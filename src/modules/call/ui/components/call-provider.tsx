@@ -1,8 +1,8 @@
 "use client"
 
 import { authClient } from "@/lib/auth-client"
-import { MySqlDateTimeBuilder } from "drizzle-orm/mysql-core"
-import { Loader2Icon, LoaderIcon } from "lucide-react"
+
+import {  LoaderIcon } from "lucide-react"
 import { CallConnect } from "./call-connect"
 import { generateAvatarUri } from "@/lib/avatar"
 
